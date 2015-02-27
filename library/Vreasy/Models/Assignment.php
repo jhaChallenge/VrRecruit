@@ -3,33 +3,31 @@
 namespace Vreasy\Models;
 
 use Vreasy\Query\Builder;
-use Vreasy\Utils\Status;
 
-class Task extends Base
+class Assignment extends Base
 {
-    // Protected attributes should match table columns
+	// Protected attributes should match table columns
     protected $id;
-    protected $deadline;
-    protected $assigned_name;
-    protected $assigned_phone;
+    protected $task_id;
+    protected $message_id;
     protected $created_at;
-    protected $updated_at;
-    protected $status;
+    protected $response_at;
+    protected $response;
 
     public function __construct()
     {
         // Validation is done run by Valitron library
         $this->validates(
             'required',
-            ['deadline', 'assigned_name', 'assigned_phone', 'status']
+            ['message_id', 'task_id']
         );
         $this->validates(
             'date',
-            ['created_at', 'updated_at']
+            ['created_at', 'response_at']
         );
         $this->validates(
             'integer',
-            ['id']
+            ['id', 'task_id']
         );
     }
 
@@ -37,15 +35,14 @@ class Task extends Base
     {
         // Base class forward all static:: method calls directly to Zend_Db
         if ($this->isValid()) {
-            $this->updated_at = gmdate(DATE_FORMAT);
             if ($this->isNew()) {
-                $this->created_at = $this->updated_at;
-                $this->status = Status::UNASSIGNED;
-                static::insert('tasks', $this->attributesForDb());
+                $this->created_at = gmdate(DATE_FORMAT);
+                static::insert('assignments', $this->attributesForDb());
                 $this->id = static::lastInsertId();
             } else {
+            	$this->response_at = gmdate(DATE_FORMAT);
                 static::update(
-                    'tasks',
+                    'assignments',
                     $this->attributesForDb(),
                     ['id = ?' => $this->id]
                 );
@@ -56,13 +53,30 @@ class Task extends Base
 
     public static function findOrInit($id)
     {
-        $task = new Task();
-        if ($tasksFound = static::where(['id' => (int)$id])) {
-            $task = array_pop($tasksFound);
+        $assignment = new Assignment();
+        if ($assignmentsFound = static::where(['id' => (int)$id])) {
+            $assignment = array_pop($assignmentsFound);
         }
-        return $task;
+        return $assignment;
     }
 
+    public static function findByMessageId($message_id)
+    {
+        $assignment = new Assignment();
+        if ($assignmentsFound = static::where(['message_id' => $message_id])) {
+            $assignment = array_pop($assignmentsFound);
+        }
+        return $assignment;
+    }
+
+    public static function findByTaskId($task_id)
+    {
+        $assignment = new Assignment();
+        if ($assignmentsFound = static::where(['task_id' => $task_id])) {
+            $assignment = array_pop($assignmentsFound);
+        }
+        return $assignment;
+    }
 
     public static function where($params, $opts = [])
     {
@@ -70,7 +84,7 @@ class Task extends Base
         $limit = 0;
         $start = 0;
         $orderBy = ['created_at'];
-        $orderDirection = ['asc'];
+        $orderDirection = ['desc'];
         extract($opts, EXTR_IF_EXISTS);
         $orderBy = array_flatten([$orderBy]);
         $orderDirection = array_flatten([$orderDirection]);
@@ -83,7 +97,7 @@ class Task extends Base
             ['wildcard' => true, 'prefix' => 't.']);
 
         // Select header
-        $select = "SELECT t.* FROM tasks AS t";
+        $select = "SELECT t.* FROM assignments AS t";
 
         // Build order by
         foreach ($orderBy as $i => $value) {

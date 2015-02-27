@@ -27,6 +27,7 @@ module.exports = function(config) {
         'bower_components/underscore/underscore-min.js',
         'bower_components/angular-resource/angular-resource.min.js',
         'bower_components/angular-mocks/angular-mocks.js',
+        'bower_components/angular-ui-router/release/angular-ui-router.min.js',
         'taskConfirmationApp/app.js',
         '../../tests/angular/*.js',
     ],

@@ -54,10 +54,20 @@ CREATE TABLE `tasks` (
   `updated_at` datetime DEFAULT NULL,
   `assigned_name` text,
   `assigned_phone` text,
+  `status` text,
+  `status_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
+CREATE TABLE `assignments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_id` int(11) DEFAULT NULL,
+  `message_id` text,
+  `created_at` datetime DEFAULT NULL,
+  `response_at` datetime DEFAULT NULL,
+  `response` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

@@ -7,3 +7,4 @@ $I->haveHttpHeader('Content-Type','application/json');
 $I->sendGET("/task/{$task->id}?format=json");
 $I->seeResponseCodeIs(200);
 $I->seeResponseContains('"assigned_name":"Jane Doe"');
+$I->seeResponseContains('"status":"unassigned"');

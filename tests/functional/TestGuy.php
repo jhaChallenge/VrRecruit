@@ -2876,6 +2876,25 @@ class TestGuy extends \Codeception\AbstractGuy
      * ----------------------------------------------
      *
      *
+     * @see Codeception\Module\TestHelper::haveAssignmentForTask()
+     * @return \Codeception\Maybe
+     */
+    public function haveAssignmentForTask($params = null) {
+        $this->scenario->addStep(new \Codeception\Step\Action('haveAssignmentForTask', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ----------------------------------------------
+     *
+     *
      * @see Codeception\Module\DbzHelper::getDbAdapter()
      * @return \Codeception\Maybe
      */

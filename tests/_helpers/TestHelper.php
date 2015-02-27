@@ -4,6 +4,7 @@ namespace Codeception\Module;
 
 use Codeception\TestCase;
 use Vreasy\Models\Task;
+use Vreasy\Models\Assignment;
 
 // here you can define custom functions for TestGuy
 class TestHelper extends \Codeception\Util\Framework
@@ -30,6 +31,7 @@ class TestHelper extends \Codeception\Util\Framework
                 'deadline' => gmdate(DATE_FORMAT),
                 'assigned_phone' => '+34666666666',
                 'assigned_name' => 'John Doe',
+                'status'        => 'pending'
             ],
             $params
         );
@@ -42,6 +44,27 @@ class TestHelper extends \Codeception\Util\Framework
         }
         \PHPUnit_Framework_Assert::assertTrue((bool) $task->save());
         return $task;
+    }
+
+    public function haveAssignmentForTask($params = [])
+    {
+        $I = $this->getModule('DbzHelper');
+        $params = array_merge(
+            [
+                'task_id' => 0,
+                'message_id' => uniqid()
+            ],
+            $params
+        );
+
+        if (isset($params['id'])) {
+            $assignment = Assignment::findOrInit($params['id']);
+            $assignment = Assignment::hydrate($assignment, $params);
+        } else {
+            $assignment = Assignment::instanceWith($params);
+        }
+        \PHPUnit_Framework_Assert::assertTrue((bool) $assignment->save());
+        return $assignment;
 
     }
 
