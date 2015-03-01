@@ -1,10 +1,5 @@
 {
     "license": "proprietary",
-    "config":{
-      "github-oauth":{
-         "github.com":"35585411cd3cbe315f708735187a3952bf699cf8"
-      }
-    },
     "repositories": [
         {
             "type": "vcs",
